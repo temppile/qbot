@@ -4,16 +4,18 @@ FROM node:18-alpine
 # Set the working directory
 WORKDIR /app
 
-# Install git to clone the repository
-RUN apk add --no-cache git
-
-# Clone the Qbot repository
-RUN git clone https://github.com/LengoLabs/qbot.git /app
+# Copy package.json and package-lock.json to install dependencies first
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Expose the bot’s port (customize if needed)
+RUN npx prisma migrate dev --schema ./src/database/schema.prisma --name init
+
+# Copy the rest of the app code into the container
+COPY . .
+
+# Expose the port Qbot uses (customize if different)
 EXPOSE 3000
 
 # Run the bot
