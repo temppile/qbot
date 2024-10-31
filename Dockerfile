@@ -1,6 +1,9 @@
 # Start from a lightweight Node.js image
 FROM node:18-alpine
 
+# Install Git, as it’s required to pull dependencies from GitHub
+RUN apk add --no-cache git
+
 # Set the working directory
 WORKDIR /app
 
