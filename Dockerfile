@@ -1,20 +1,30 @@
-# Start from a lightweight Node.js image
+# Use the latest Node.js image
 FROM node:18-alpine
 
 # Set the working directory
 WORKDIR /app
 
-# Install git to clone the repository
-RUN apk add --no-cache git
-
-# Clone the Qbot repository
-RUN git clone https://github.com/LengoLabs/qbot.git /app
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Expose the bot’s port (customize if needed)
+# Install Prisma CLI globally (if not already included in package.json)
+RUN npm install -g prisma
+
+# Copy the rest of the project files
+COPY . .
+
+# Generate Prisma client and run migrations
+RUN npx prisma generate --schema ./src/database/schema.prisma
+RUN npx prisma migrate dev --schema ./src/database/schema.prisma --name init
+
+# Set environment variables (optional, can also be set in Northflank UI)
+ENV PORT=3000
+
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Run the bot
+# Start the bot
 CMD ["npm", "start"]
