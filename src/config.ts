@@ -46,7 +46,7 @@ export const config: BotConfig = {
         demotionRank: 1,
     },
     activity: {
-        enabled: false,
+        enabled: true,
         type: ActivityType.Watching,
         value: 'over Wingstop!',
     },
