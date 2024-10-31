@@ -16,6 +16,8 @@ RUN npm install -g prisma
 # Copy the rest of the project files
 COPY . .
 
+RUN npm install got@11.8.2
+
 # Generate Prisma client and run migrations
 RUN npx prisma generate --schema ./src/database/schema.prisma
 RUN npx prisma migrate dev --schema ./src/database/schema.prisma --name init
