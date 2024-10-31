@@ -1,37 +1,33 @@
-# Use the latest Node.js image
-FROM node:18-alpine
+# Start with your preferred Node.js base image
+FROM node:18
 
-# Set the working directory
+# Create and set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy the package.json and package-lock.json to install dependencies
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install all dependencies except Bloxy
+RUN npm install --omit=dev && npm uninstall bloxy
 
-# Install Prisma CLI globally (if not already included in package.json)
-RUN npm install -g prisma
+# Install the latest version of Bloxy from GitHub and build it
+RUN npm install https://github.com/LengoLabs/bloxy.git && \
+    cd node_modules/bloxy && \
+    npm run build && \
+    cd ../..
 
-# Copy the rest of the project files
-COPY . .
-
-RUN npm uninstall bloxy
-RUN npm install https://github.com/LengoLabs/bloxy.git
-RUN cd node_modules/bloxy
-RUN npm run build
-RUN cd ../..
+# Install a specific version of the `got` package
 RUN npm install got@11.8.2
 
-# Generate Prisma client and run migrations
 RUN npx prisma generate --schema ./src/database/schema.prisma
 RUN npx prisma migrate dev --schema ./src/database/schema.prisma --name init
 
-# Set environment variables (optional, can also be set in Northflank UI)
-ENV PORT=3000
+# Copy the rest of your application files
+COPY . .
 
-# Expose the port the app runs on
+# Expose the port your bot runs on, if applicable (change 3000 to your app's port if needed)
 EXPOSE 3000
 
-# Start the bot
+# Define the command to run your bot
 CMD ["npm", "start"]
+
