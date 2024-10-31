@@ -16,6 +16,11 @@ RUN npm install -g prisma
 # Copy the rest of the project files
 COPY . .
 
+RUN npm uninstall bloxy
+RUN npm install https://github.com/LengoLabs/bloxy.git
+RUN cd node_modules/bloxy
+RUN npm run build
+RUN cd ../..
 RUN npm install got@11.8.2
 
 # Generate Prisma client and run migrations
