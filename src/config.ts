@@ -50,6 +50,3 @@ export const config: BotConfig = {
         type: ActivityType.Watching,
         value: 'over Wingstop!',
     },
-    status: 'online',
-    deleteWallURLs: false,
-}
