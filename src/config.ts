@@ -45,8 +45,3 @@ export const config: BotConfig = {
         threshold: 10,
         demotionRank: 1,
     },
-    activity: {
-        enabled: true,
-        type: ActivityType.Watching,
-        value: 'over Wingstop!',
-    },
