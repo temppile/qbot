@@ -8,13 +8,17 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install -D
 
 # Copy the rest of the code
 COPY . .
 
-# Compile TypeScript
+RUN npm uninstall bloxy
+RUN npm install https://github.com/LengoLabs/bloxy.git
+RUN cd node_modules/bloxy
 RUN npm run build
+RUN cd ../..
+RUN npm install got@11.8.2
 
 # Expose the port that Qbot will run on
 EXPOSE 3000
