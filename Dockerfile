@@ -7,13 +7,16 @@ WORKDIR /app
 # Copy package.json and package-lock.json first to leverage Docker cache
 COPY package*.json ./
 
-# Install dependencies without devDependencies and handle deprecations
-RUN npm install --omit=dev && \
-    npm uninstall signalr-client && \
-    npm install simple-update-notifier@latest semver@latest got@12.0.0 @sapphire/framework && \
+# Install Qbot's main dependencies with `-D` flag
+RUN npm install -D
+
+# Uninstall and reinstall specific dependencies due to known issues
+RUN npm uninstall bloxy && \
     npm install https://github.com/LengoLabs/bloxy.git && \
-    npm install --save-dev @types/debug @types/tough-cookie && \
-    npm run build --prefix node_modules/bloxy
+    cd node_modules/bloxy && \
+    npm run build && \
+    cd ../.. && \
+    npm install got@11.8.2
 
 # Generate Prisma client and apply database migrations
 COPY ./src/database/schema.prisma ./src/database/schema.prisma
