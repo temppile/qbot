@@ -7,24 +7,24 @@ WORKDIR /app
 # Copy package.json and package-lock.json first to leverage Docker cache
 COPY package*.json ./
 
-# Install dependencies, excluding Bloxy initially for a cleaner install
-RUN npm ci --omit=dev --silent && npm uninstall bloxy --silent
-
-# Set network timeout in case of network issues
+# Increase network timeout to handle any network delays
 RUN npm config set network-timeout 600000
+
+# Install dependencies without devDependencies
+RUN npm ci --omit=dev && \
+    if npm list bloxy > /dev/null 2>&1; then npm uninstall bloxy; fi
 
 # Address any vulnerabilities if possible
 RUN npm audit fix --force
 
 # Install the latest version of Bloxy from GitHub and build it
-RUN npm install https://github.com/LengoLabs/bloxy.git --silent && \
-    npm run build --prefix node_modules/bloxy --silent
+RUN npm install https://github.com/LengoLabs/bloxy.git && \
+    npm run build --prefix node_modules/bloxy
 
 # Install a specific version of `got` package
-RUN npm install got@11.8.2 --silent
+RUN npm install got@11.8.2
 
 # Generate Prisma client and apply database migrations
-# Make sure DATABASE_URL is set in Northflank environment variables
 COPY ./src/database/schema.prisma ./src/database/schema.prisma
 RUN npx prisma generate --schema ./src/database/schema.prisma && \
     npx prisma migrate dev --schema ./src/database/schema.prisma --name init
