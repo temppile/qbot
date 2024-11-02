@@ -12,6 +12,9 @@ RUN npm install --omit=dev && \
     npm uninstall signalr-client && \
     if npm list bloxy > /dev/null 2>&1; then npm uninstall bloxy; fi
 
+# Explicitly update vulnerable packages
+RUN npm update semver && npm update simple-update-notifier && npm update nodemon
+
 # Address any vulnerabilities if possible
 RUN npm audit fix --force
 
