@@ -12,11 +12,8 @@ RUN npm install --omit=dev && \
     npm uninstall signalr-client && \
     if npm list bloxy > /dev/null 2>&1; then npm uninstall bloxy; fi
 
-# Explicitly update vulnerable packages
-RUN npm update semver && npm update simple-update-notifier && npm update nodemon
-
-# Address any vulnerabilities if possible
-RUN npm audit fix --force
+# Address vulnerabilities
+RUN npm update semver && npm update simple-update-notifier && npm update nodemon && npm audit fix --force
 
 # Install the latest version of Bloxy from GitHub and build it
 RUN npm install https://github.com/LengoLabs/bloxy.git && \
@@ -38,15 +35,3 @@ EXPOSE 3000
 
 # Define the default command to run your bot
 CMD ["npm", "start"]
-
-# Remove the GitHub clone commands and only run the necessary setup
-RUN npm install -D && \
-    npm uninstall bloxy && \
-    npm install https://github.com/LengoLabs/bloxy.git && \
-    cd node_modules/bloxy && \
-    npm run build && \
-    cd ../.. && \
-    npm install got@12.0.0 && \
-    npx prisma migrate dev --schema ./src/database/schema.prisma --name init && \
-    pm2 start npm --name "qbot" -- start && \
-    pm2 save
