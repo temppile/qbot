@@ -19,6 +19,9 @@ RUN npm install simple-update-notifier@latest && \
 # Address remaining vulnerabilities
 RUN npm audit fix --force
 
+# Install type definitions for 'debug' and 'tough-cookie'
+RUN npm install --save-dev @types/debug @types/tough-cookie
+
 # Install the latest version of Bloxy from GitHub and build it
 RUN npm install https://github.com/LengoLabs/bloxy.git && \
     npm run build --prefix node_modules/bloxy
