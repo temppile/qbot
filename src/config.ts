@@ -1,4 +1,4 @@
-import { ActivityType } from 'discord.js';
+
 import { BotConfig } from './structures/types'; 
 
 export const config: BotConfig = {

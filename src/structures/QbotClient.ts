@@ -26,22 +26,15 @@ class QbotClient extends Client {
         this.on('ready', () => {
             console.log(qbotLaunchTextDisplay);
             console.log(welcomeText);
-            if(this.application.botPublic) return console.log(securityText);
+            if (this.application.botPublic) return console.log(securityText);
             console.log(startedText);
             console.log(getListeningText(process.env.PORT || 3001));
             this.loadCommands();
             getLogChannels();
-
-            if(config.activity.enabled) {
-                this.user.setActivity(config.activity.value, {
-                    type: config.activity.type,
-                    url: config.activity.url,
-                });
-            }
-
-            if(config.status !== 'online') this.user.setStatus(config.status);
         });
     }
+}
+
 
     /**
      * Load all commands into the commands object of QbotClient.

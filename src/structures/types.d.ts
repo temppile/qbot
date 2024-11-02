@@ -1,5 +1,4 @@
 import {
-    ActivityType,
     ApplicationCommandOptionChoiceData,
     ApplicationCommandOptionAllowedChannelTypes
 } from 'discord.js';
@@ -194,36 +193,9 @@ export interface BotConfig {
          * Is there a role that can bypass this? If so, place the ID here.
          */
         bypassRoleId?: string;
+    
     }
-    /**
-     * Configuration for the bot's activity status (rich presence) on Discord.
-     */
-    activity: {
-        /**
-         * Should there be an activity status for the bot?
-         */
-        enabled: boolean;
-        /**
-         * What should be displayed before your value?
-         */
-        type?: ActivityType.Playing | ActivityType.Streaming | ActivityType.Listening | ActivityType.Watching | ActivityType.Competing;
-        /**
-         * This is the text that is displayed after the type of status.
-         */
-        value?: string;
-        /**
-         * If you set the type to STREAMING, where should the watch now button redirect to?
-         */
-        url?: string;
-    }
-    /**
-     * Configuration for the bot's status (online/idle/dnd).
-     */
-    status: 'online' | 'idle' | 'dnd';
-    /**
-     * Should the bot delete URLs in your group wall?
-     */
-    deleteWallURLs: boolean;
+
 }
 
 export declare type CommandPermission = {

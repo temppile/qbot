@@ -12,9 +12,9 @@ export const xmarkIconUrl = 'https://cdn.lengolabs.com/qbot-icons/xmark.png';
 export const infoIconUrl = 'https://cdn.lengolabs.com/qbot-icons/info.png';
 export const quoteIconUrl = 'https://cdn.lengolabs.com/qbot-icons/quote.png';
 
-export const mainColor = '#906FED';
-export const greenColor = '#50C790';
-export const redColor = '#FA5757';
+export const mainColor = '#015558';
+export const greenColor = '#015558';
+export const redColor = '#015558';
 
 export const consoleMagenta = '\x1b[35m';
 export const consoleGreen = '\x1b[32m';
