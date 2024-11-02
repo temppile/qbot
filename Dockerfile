@@ -10,21 +10,21 @@ COPY package*.json ./
 # Increase network timeout to handle any network delays
 RUN npm config set network-timeout 600000
 
-# Install dependencies without devDependencies
-RUN npm ci --omit=dev && \
-    if npm list bloxy > /dev/null 2>&1; then npm uninstall bloxy; fi
+# Install dependencies without devDependencies and remove any unused packages
+RUN npm ci --omit=dev --no-audit --no-fund && \
+    npm uninstall bloxy || true
 
 # Address any vulnerabilities if possible
 RUN npm audit fix --force
 
 # Install the latest version of Bloxy from GitHub and build it
-RUN npm install https://github.com/LengoLabs/bloxy.git && \
+RUN npm install https://github.com/LengoLabs/bloxy.git --no-audit --no-fund && \
     npm run build --prefix node_modules/bloxy
 
-# Install a specific version of `got` package
-RUN npm install got@11.8.2
+# Install the specified version of `got` package
+RUN npm install got@11.8.2 --no-audit --no-fund
 
-# Generate Prisma client and apply database migrations
+# Copy only Prisma schema and generate Prisma client and apply migrations
 COPY ./src/database/schema.prisma ./src/database/schema.prisma
 RUN npx prisma generate --schema ./src/database/schema.prisma && \
     npx prisma migrate dev --schema ./src/database/schema.prisma --name init
@@ -32,8 +32,8 @@ RUN npx prisma generate --schema ./src/database/schema.prisma && \
 # Copy the rest of your application files
 COPY . .
 
-# Expose the port your bot runs on (change 3000 if needed)
+# Expose the port Qbot runs on
 EXPOSE 3000
 
-# Define the default command to run your bot
+# Define the default command to run Qbot
 CMD ["npm", "start"]
