@@ -9,25 +9,11 @@ COPY package*.json ./
 
 # Install dependencies without devDependencies and handle deprecations
 RUN npm install --omit=dev && \
-    npm uninstall signalr-client
-
-# Address vulnerabilities in specific dependencies
-RUN npm install simple-update-notifier@latest && \
-    npm install nodemon@latest && \
-    npm install semver@latest
-
-# Address remaining vulnerabilities
-RUN npm audit fix --force
-
-# Install type definitions for 'debug' and 'tough-cookie'
-RUN npm install --save-dev @types/debug @types/tough-cookie
-
-# Install the latest version of Bloxy from GitHub and build it
-RUN npm install https://github.com/LengoLabs/bloxy.git && \
+    npm uninstall signalr-client && \
+    npm install simple-update-notifier@latest semver@latest got@12.0.0 @sapphire/framework && \
+    npm install https://github.com/LengoLabs/bloxy.git && \
+    npm install --save-dev @types/debug @types/tough-cookie && \
     npm run build --prefix node_modules/bloxy
-
-# Install a specific version of `got` package
-RUN npm install got@12.0.0
 
 # Generate Prisma client and apply database migrations
 COPY ./src/database/schema.prisma ./src/database/schema.prisma
