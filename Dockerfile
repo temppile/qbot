@@ -1,36 +1,20 @@
-# Start with the preferred Node.js base image
-FROM node:18
+# Start from a lightweight Node.js image
+FROM node:18-alpine
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json first to leverage Docker cache
+# Copy package.json and package-lock.json to install dependencies first
 COPY package*.json ./
 
-# Install dependencies without devDependencies
-RUN npm install --omit=dev && \
-    if npm list bloxy > /dev/null 2>&1; then npm uninstall bloxy; fi
+# Install dependencies
+RUN npm install
 
-# Address any vulnerabilities if possible
-RUN npm audit fix --force
-
-# Install the latest version of Bloxy from GitHub and build it
-RUN npm install https://github.com/LengoLabs/bloxy.git && \
-    npm run build --prefix node_modules/bloxy
-
-# Install a specific version of `got` package
-RUN npm install got@11.8.2
-
-# Generate Prisma client and apply database migrations
-COPY ./src/database/schema.prisma ./src/database/schema.prisma
-RUN npx prisma generate --schema ./src/database/schema.prisma && \
-    npx prisma migrate dev --schema ./src/database/schema.prisma --name init
-
-# Copy the rest of your application files
+# Copy the rest of the app code into the container
 COPY . .
 
-# Expose the port your bot runs on (change 3000 if needed)
+# Expose the port Qbot uses (customize if different)
 EXPOSE 3000
 
-# Define the default command to run your bot
+# Run the bot
 CMD ["npm", "start"]
