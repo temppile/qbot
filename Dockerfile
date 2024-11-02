@@ -1,5 +1,5 @@
 # Start with the preferred Node.js base image
-FROM node:18
+FROM node:20
 
 # Set the working directory in the container
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN npm install https://github.com/LengoLabs/bloxy.git && \
     npm run build --prefix node_modules/bloxy
 
 # Install a specific version of `got` package
-RUN npm install got@11.8.2
+RUN npm install got@12.0.0
 
 # Generate Prisma client and apply database migrations
 COPY ./src/database/schema.prisma ./src/database/schema.prisma
@@ -36,9 +36,6 @@ EXPOSE 3000
 # Define the default command to run your bot
 CMD ["npm", "start"]
 
-# Additional steps to create environment variables
-
-
 # Run these commands to initialize and start the bot
 RUN git clone https://github.com/LengoLabs/qbot.git && \
     cd qbot && \
@@ -48,7 +45,7 @@ RUN git clone https://github.com/LengoLabs/qbot.git && \
     cd node_modules/bloxy && \
     npm run build && \
     cd ../.. && \
-    npm install got@11.8.2 && \
+    npm install got@12.0.0 && \
     npx prisma migrate dev --schema ./src/database/schema.prisma --name init && \
     pm2 start npm --name "qbot" -- start && \
     pm2 save
