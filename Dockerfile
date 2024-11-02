@@ -39,10 +39,8 @@ EXPOSE 3000
 # Define the default command to run your bot
 CMD ["npm", "start"]
 
-# Run these commands to initialize and start the bot
-RUN git clone https://github.com/LengoLabs/qbot.git && \
-    cd qbot && \
-    npm install -D && \
+# Remove the GitHub clone commands and only run the necessary setup
+RUN npm install -D && \
     npm uninstall bloxy && \
     npm install https://github.com/LengoLabs/bloxy.git && \
     cd node_modules/bloxy && \
