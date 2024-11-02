@@ -9,11 +9,15 @@ COPY package*.json ./
 
 # Install dependencies without devDependencies and handle deprecations
 RUN npm install --omit=dev && \
-    npm uninstall signalr-client && \
-    if npm list bloxy > /dev/null 2>&1; then npm uninstall bloxy; fi
+    npm uninstall signalr-client
 
-# Address vulnerabilities
-RUN npm update semver && npm update simple-update-notifier && npm update nodemon && npm audit fix --force
+# Address vulnerabilities in specific dependencies
+RUN npm install simple-update-notifier@latest && \
+    npm install nodemon@latest && \
+    npm install semver@latest
+
+# Address remaining vulnerabilities
+RUN npm audit fix --force
 
 # Install the latest version of Bloxy from GitHub and build it
 RUN npm install https://github.com/LengoLabs/bloxy.git && \
