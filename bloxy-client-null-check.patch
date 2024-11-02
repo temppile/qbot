@@ -1,0 +1,11 @@
+--- a/node_modules/bloxy/dist/client/Client.js
++++ b/node_modules/bloxy/dist/client/Client.js
+@@ -108,7 +108,7 @@
+ // Assuming line 111 is where the error occurs
+ const someObject = response.someObject;
+ 
+-const finalValue = someObject.Final;
++const finalValue = someObject && someObject.Final ? someObject.Final : null;
+ if (!finalValue) {
+     console.error("Expected a value for 'Final', but got null or undefined");
+ }
